@@ -61,27 +61,32 @@
             </LinearLayout>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="University" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="12dp"/>
+                android:text="University" android:textColor="#888888" android:textSize="12sp"
+                android:layout_marginTop="12dp"/>
             <TextView android:id="@+id/tv_university" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:textSize="15sp" android:layout_marginTop="2dp"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Location" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="12dp"/>
+                android:text="District" android:textColor="#888888" android:textSize="12sp"
+                android:layout_marginTop="12dp"/>
             <TextView android:id="@+id/tv_location" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:textSize="15sp" android:layout_marginTop="2dp"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Address" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="12dp"/>
+                android:text="Address" android:textColor="#888888" android:textSize="12sp"
+                android:layout_marginTop="12dp"/>
             <TextView android:id="@+id/tv_address" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:textSize="15sp" android:layout_marginTop="2dp"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Phone" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="12dp"/>
+                android:text="Region" android:textColor="#888888" android:textSize="12sp"
+                android:layout_marginTop="12dp"/>
             <TextView android:id="@+id/tv_phone" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:textSize="15sp" android:layout_marginTop="2dp"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Website" android:textColor="#888888" android:textSize="12sp" android:layout_marginTop="12dp"/>
+                android:text="Funding Type" android:textColor="#888888" android:textSize="12sp"
+                android:layout_marginTop="12dp"/>
             <TextView android:id="@+id/tv_website" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:textSize="15sp" android:layout_marginTop="2dp"/>
 

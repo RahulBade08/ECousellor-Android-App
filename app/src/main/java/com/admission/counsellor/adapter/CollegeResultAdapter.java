@@ -68,17 +68,35 @@ public class CollegeResultAdapter extends RecyclerView.Adapter<CollegeResultAdap
 
         void bind(CollegeResult result) {
             tvName.setText(result.getCollegeName());
-            tvBranch.setText(result.getBranch());
+            tvBranch.setText(result.getBranch());           // returns courseName
             tvLocation.setText(result.getDistrict());
-            tvUniversity.setText(result.getUniversity());
-            tvCutoff.setText("Cutoff Rank: " + result.getCutoffRank()
-                    + "  |  " + result.getCutoffPercentile() + "%");
-            tvCategory.setText(result.getCategory() + " · " + result.getGender());
+            tvUniversity.setText(result.getUniversity());   // returns region
 
-            chipAutonomous.setVisibility(result.isAutonomous() ? View.VISIBLE : View.GONE);
+            // Show cutoff percentile + risk instead of rank (backend changed)
+            String cutoffText = "";
+            if (result.getCutoffPercentile() != null) {
+                cutoffText = "Cutoff: " + result.getCutoffPercentile() + "%";
+            }
+            if (result.getRisk() != null) {
+                cutoffText += "  |  Risk: " + result.getRisk();
+            }
+            tvCutoff.setText(cutoffText);
+
+            // Show confidence + probability instead of category/gender
+            String infoText = "";
+            if (result.getConfidence() != null) {
+                infoText = result.getConfidence();
+            }
+            if (result.getProbability() > 0) {
+                infoText += "  ·  " + Math.round(result.getProbability() * 100) + "% chance";
+            }
+            tvCategory.setText(infoText);
+
+            chipAutonomous.setVisibility(
+                    Boolean.TRUE.equals(result.getIsAutonomous()) ? View.VISIBLE : View.GONE);
             chipAided.setText(result.isAided() ? "Aided" : "Unaided");
 
-            btnCutoff.setOnClickListener(v -> listener.onClick(result));
+            btnCutoff.setVisibility(View.GONE);
         }
     }
 }

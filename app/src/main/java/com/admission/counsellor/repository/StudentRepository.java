@@ -3,7 +3,6 @@ package com.admission.counsellor.repository;
 
 import com.admission.counsellor.model.PageResponse;
 import com.admission.counsellor.model.CollegeResult;
-import com.admission.counsellor.model.CutoffHistory;
 import com.admission.counsellor.model.StudentPreferenceRequest;
 import com.admission.counsellor.network.RetrofitClient;
 

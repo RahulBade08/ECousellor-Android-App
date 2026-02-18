@@ -52,13 +52,7 @@ public class CollegeResultsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         adapter = new CollegeResultAdapter(result -> {
-            // Pass data to CutoffChartFragment
-            Bundle bundle = new Bundle();
-            bundle.putString("collegeCode", result.getCollegeCode());
-            bundle.putString("collegeName", result.getCollegeName());
-            bundle.putString("branch", result.getBranch());
-            Navigation.findNavController(view)
-                    .navigate(R.id.action_collegeResults_to_cutoffChart, bundle);
+            // Chart feature coming soon
         });
         recyclerView.setAdapter(adapter);
 

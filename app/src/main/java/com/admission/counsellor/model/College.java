@@ -5,8 +5,8 @@ import java.util.List;
 
 public class College {
 
-    @SerializedName("id")
-    private long id;
+    @SerializedName("collegeId")
+    private long collegeId;
 
     @SerializedName("collegeCode")
     private String collegeCode;
@@ -14,57 +14,105 @@ public class College {
     @SerializedName("collegeName")
     private String collegeName;
 
-    @SerializedName("university")
-    private String university;
+    @SerializedName("courseUniversity")
+    private String courseUniversity;
 
-    @SerializedName("district")
-    private String district;
+    @SerializedName("fundingType")
+    private String fundingType;
 
-    @SerializedName("autonomous")
-    private boolean autonomous;
+    @SerializedName("isAutonomous")
+    private Boolean isAutonomous;
 
-    @SerializedName("aided")
-    private boolean aided;
+    @SerializedName("minorityStatus")
+    private String minorityStatus;
 
-    @SerializedName("courses")
-    private List<Course> courses;
-
-    @SerializedName("website")
-    private String website;
-
-    @SerializedName("phone")
-    private String phone;
+    @SerializedName("totalIntake")
+    private Integer totalIntake;
 
     @SerializedName("address")
     private String address;
 
-    // ── Getters ──────────────────────────────────────
-    public long getId() { return id; }
-    public String getCollegeCode() { return collegeCode; }
-    public String getCollegeName() { return collegeName; }
-    public String getUniversity() { return university; }
-    public String getDistrict() { return district; }
-    public boolean isAutonomous() { return autonomous; }
-    public boolean isAided() { return aided; }
-    public List<Course> getCourses() { return courses; }
-    public String getWebsite() { return website; }
-    public String getPhone() { return phone; }
-    public String getAddress() { return address; }
+    @SerializedName("region")
+    private String region;
 
-    // ── Inner class: Course ───────────────────────────
-    public static class Course {
+    @SerializedName("district")
+    private String district;
 
-        @SerializedName("branchCode")
-        private String branchCode;
+    @SerializedName("courses")
+    private List<CourseDTO> courses;
 
-        @SerializedName("branchName")
-        private String branchName;
+    // Getters
+    public long getId()                  { return collegeId; }
+    public long getCollegeId()           { return collegeId; }
+    public String getCollegeCode()       { return collegeCode; }
+    public String getCollegeName()       { return collegeName; }
+    public String getUniversity()        { return courseUniversity; }
+    public String getCourseUniversity()  { return courseUniversity; }
+    public String getFundingType()       { return fundingType; }
+    public Boolean getIsAutonomous()     { return isAutonomous != null && isAutonomous; }
+    public boolean isAutonomous()        { return isAutonomous != null && isAutonomous; }
+    public String getMinorityStatus()    { return minorityStatus; }
+    public Integer getTotalIntake()      { return totalIntake; }
+    public String getAddress()           { return address; }
+    public String getRegion()            { return region; }
+    public String getDistrict()          { return district; }
+    public List<CourseDTO> getCourses()  { return courses; }
+
+    // Convenience - isAided based on fundingType
+    public boolean isAided() {
+        return fundingType != null && fundingType.toLowerCase().contains("aided");
+    }
+
+    // Nested CourseDTO matching backend CollegeDTO.CourseDTO
+    public static class CourseDTO {
+
+        @SerializedName("courseId")
+        private Long courseId;
+
+        @SerializedName("courseCode")
+        private String courseCode;
+
+        @SerializedName("courseName")
+        private String courseName;
+
+        @SerializedName("courseStatus")
+        private String courseStatus;
 
         @SerializedName("intake")
-        private int intake;
+        private Integer intake;
 
-        public String getBranchCode() { return branchCode; }
-        public String getBranchName() { return branchName; }
-        public int getIntake() { return intake; }
+        @SerializedName("university")
+        private String university;
+
+        @SerializedName("isAutonomous")
+        private Boolean isAutonomous;
+
+        @SerializedName("minorityStatus")
+        private String minorityStatus;
+
+        @SerializedName("shift")
+        private String shift;
+
+        @SerializedName("accreditation")
+        private String accreditation;
+
+        @SerializedName("gender")
+        private String gender;
+
+        public Long getCourseId()         { return courseId; }
+        public String getCourseCode()     { return courseCode; }
+        public String getCourseName()     { return courseName; }
+        public String getCourseStatus()   { return courseStatus; }
+        public Integer getIntake()        { return intake; }
+        public String getUniversity()     { return university; }
+        public Boolean getIsAutonomous()  { return isAutonomous; }
+        public String getMinorityStatus() { return minorityStatus; }
+        public String getShift()          { return shift; }
+        public String getAccreditation()  { return accreditation; }
+        public String getGender()         { return gender; }
+
+        // Aliases used by existing adapter code
+        public String getBranchName()     { return courseName; }
+        public String getBranchCode()     { return courseCode; }
     }
 }

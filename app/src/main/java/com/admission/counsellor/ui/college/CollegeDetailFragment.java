@@ -64,14 +64,26 @@ public class CollegeDetailFragment extends Fragment {
 
         ((TextView) view.findViewById(R.id.tv_college_name)).setText(college.getCollegeName());
         ((TextView) view.findViewById(R.id.tv_college_code)).setText("Code: " + college.getCollegeCode());
-        ((TextView) view.findViewById(R.id.tv_university)).setText(college.getUniversity());
-        ((TextView) view.findViewById(R.id.tv_location)).setText(college.getDistrict());
+
+        // University
+        ((TextView) view.findViewById(R.id.tv_university)).setText(
+                college.getCourseUniversity() != null ? college.getCourseUniversity() : "N/A");
+
+        // Location = district
+        ((TextView) view.findViewById(R.id.tv_location)).setText(
+                college.getDistrict() != null ? college.getDistrict() : "N/A");
+
+        // Address
         ((TextView) view.findViewById(R.id.tv_address)).setText(
                 college.getAddress() != null ? college.getAddress() : "N/A");
+
+        // Phone field → shows Region (backend has no phone field)
         ((TextView) view.findViewById(R.id.tv_phone)).setText(
-                college.getPhone() != null ? college.getPhone() : "N/A");
+                college.getRegion() != null ? college.getRegion() : "N/A");
+
+        // Website field → shows Funding Type (backend has no website field)
         ((TextView) view.findViewById(R.id.tv_website)).setText(
-                college.getWebsite() != null ? college.getWebsite() : "N/A");
+                college.getFundingType() != null ? college.getFundingType() : "N/A");
 
         // Status chips
         Chip chipAuto  = view.findViewById(R.id.chip_autonomous);
@@ -83,9 +95,10 @@ public class CollegeDetailFragment extends Fragment {
         ChipGroup courseGroup = view.findViewById(R.id.chip_group_courses);
         courseGroup.removeAllViews();
         if (college.getCourses() != null) {
-            for (College.Course course : college.getCourses()) {
+            for (College.CourseDTO course : college.getCourses()) {
                 Chip chip = new Chip(requireContext());
-                chip.setText(course.getBranchName() + " (" + course.getIntake() + " seats)");
+                chip.setText(course.getCourseName()
+                        + (course.getIntake() != null ? " (" + course.getIntake() + " seats)" : ""));
                 chip.setCheckable(false);
                 courseGroup.addView(chip);
             }
