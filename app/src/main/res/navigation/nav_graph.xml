@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/studentFormFragment">
+
+    <fragment
+        android:id="@+id/studentFormFragment"
+        android:name="com.admission.counsellor.ui.student.StudentFormFragment"
+        android:label="Find Colleges">
+        <action
+            android:id="@+id/action_studentForm_to_collegeResults"
+            app:destination="@id/collegeResultsFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/collegeResultsFragment"
+        android:name="com.admission.counsellor.ui.student.CollegeResultsFragment"
+        android:label="Results">
+        <action
+            android:id="@+id/action_collegeResults_to_cutoffChart"
+            app:destination="@id/cutoffChartFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/cutoffChartFragment"
+        android:name="com.admission.counsellor.ui.student.CutoffChartFragment"
+        android:label="Cutoff History"/>
+
+    <fragment
+        android:id="@+id/collegeListFragment"
+        android:name="com.admission.counsellor.ui.college.CollegeListFragment"
+        android:label="Colleges">
+        <action
+            android:id="@+id/action_collegeList_to_collegeDetail"
+            app:destination="@id/collegeDetailFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/collegeDetailFragment"
+        android:name="com.admission.counsellor.ui.college.CollegeDetailFragment"
+        android:label="College Detail"/>
+
+</navigation>
