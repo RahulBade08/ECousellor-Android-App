@@ -17,7 +17,7 @@ public class RetrofitClient {
      *  Real device on same WiFi as your PC:
      *      http://192.168.1.XX:8080/   ← find your PC IP with ipconfig / ifconfig
      */
-    private static final String BASE_URL = "http://localhost:8080/";    //one change***
+    private static final String BASE_URL = "192.168.90.117:8080/";    //one change***
 
     private static RetrofitClient instance;
     private final ApiService apiService;

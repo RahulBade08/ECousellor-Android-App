@@ -15,7 +15,7 @@ public class CollegeRepository {
     // ── Get All Colleges (paginated) ────────────────────────
     public void getAllColleges(int page, StudentRepository.ApiCallback<List<College>> callback) {
         client.getApiService()
-                .getAllColleges(page, 20)
+                .getAllColleges()
                 .enqueue(new Callback<List<College>>() {
                     @Override
                     public void onResponse(Call<List<College>> call, Response<List<College>> response) {
