@@ -14,13 +14,33 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tv_college_name"
+        <!-- Row: college name + shortlist button -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:id="@+id/tv_college_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <!-- SHORTLIST BUTTON — tapping this records a shortlist event -->
+            <ImageButton
+                android:id="@+id/btn_shortlist"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/btn_star_big_off"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Shortlist"
+                android:layout_marginStart="8dp"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_branch"
@@ -94,7 +114,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="View Cutoff"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
     </LinearLayout>

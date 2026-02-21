@@ -1,47 +1,47 @@
 package com.admission.counsellor.model;
 
-/**
- * All constant dropdown values used in the Student Form.
- * Update these lists to exactly match what your Spring Boot backend accepts.
- */
 public class AppConstants {
 
-    // Matches your "category" field
     public static final String[] CATEGORIES = {
             "OPEN", "OBC", "SC", "ST", "NT1", "NT2", "NT3", "VJ", "EWS", "TFWS"
     };
 
-    // Matches your "gender" field
     public static final String[] GENDERS = {
             "GENERAL", "LADIES"
     };
 
-    // Matches your "admissionType" field
     public static final String[] ADMISSION_TYPES = {
             "STATE", "HOME", "OTHER"
     };
 
-    // Matches your "round" field
     public static final Integer[] ROUNDS = { 1, 2, 3, 4 };
 
-    // Common Maharashtra engineering branches
+    // Group labels shown in the searchable branch dropdown.
+    // Backend's BranchGroups.expand() converts each label to exact DB course names.
+    // e.g. "Computer Science" -> 24 exact DB names -> SQL IN query finds all colleges.
     public static final String[] BRANCHES = {
-            "Computer Science and Engineering",
-            "Information Technology",
-            "Electronics and Telecommunication Engineering",
+            "Computer Science",
+            "Information Technology & Data Science",
+            "Electronics & Communication",
+            "Electrical Engineering",
             "Mechanical Engineering",
             "Civil Engineering",
-            "Electrical Engineering",
-            "Artificial Intelligence and Data Science",
-            "Chemical Engineering",
-            "Production Engineering",
-            "Instrumentation Engineering"
+            "Artificial Intelligence & ML",
+            "Chemical & Petroleum Technology",
+            "Textile & Fibre Technology",
+            "Food & Bio Technology",
+            "Production & Manufacturing",
+            "Other Engineering"
     };
 
-    // Maharashtra districts
+    // Exact district names as stored in DB.
     public static final String[] DISTRICTS = {
-            "Pune", "Mumbai", "Thane", "Nashik", "Aurangabad",
-            "Nagpur", "Kolhapur", "Solapur", "Amravati",
-            "Nanded", "Sangli", "Satara", "Raigad", "Ahmednagar"
+            "Ahmednagar", "Akola", "Amravati", "Beed", "Bhandara",
+            "Buldhana", "Chandrapur", "Chhatrapati Sambhajinagar", "Dharashiv",
+            "Dhule", "Jalgaon", "Jalna", "Kolhapur", "Latur",
+            "Mumbai City", "Mumbai Suburban", "Nagpur", "Nanded",
+            "Nandurbar", "Nashik", "Palghar", "Parbhani", "Pune",
+            "Raigad", "Ratnagiri", "Sangli", "Satara", "Sindhudurg",
+            "Solapur", "Thane", "Wardha", "Washim", "Yavatmal"
     };
 }

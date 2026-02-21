@@ -105,19 +105,39 @@
                 android:text="Female"/>
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
+        <!-- ── Branch Search Dropdown (searchable multi-select) ─────────────── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preferred Branches (select one or more)"
+            android:text="Preferred Branches (select one or more)*"
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_branch_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type to search branches…"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginBottom="6dp"
+            app:endIconMode="clear_text">
+            <AutoCompleteTextView
+                android:id="@+id/auto_branch_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:inputType="text"
+                android:imeOptions="actionDone"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Selected branch chips shown after user picks from dropdown -->
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_branches"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"/>
 
+        <!-- ── District Search Dropdown (searchable multi-select) ────────────── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -125,6 +145,24 @@
             android:textStyle="bold"
             android:layout_marginBottom="8dp"/>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_district_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type to search districts…"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginBottom="6dp"
+            app:endIconMode="clear_text">
+            <AutoCompleteTextView
+                android:id="@+id/auto_district_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:completionThreshold="1"
+                android:inputType="text"
+                android:imeOptions="actionDone"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Selected district chips shown after user picks from dropdown -->
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chip_group_districts"
             android:layout_width="match_parent"

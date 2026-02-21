@@ -22,10 +22,10 @@ import android.widget.TextView;
 
 public class CollegeResultsFragment extends Fragment {
 
-    private StudentViewModel viewModel;
+    private StudentViewModel     viewModel;
     private CollegeResultAdapter adapter;
-    private ProgressBar progressBar;
-    private TextView tvEmpty, tvCount;
+    private ProgressBar          progressBar;
+    private TextView             tvEmpty, tvCount;
 
     @Nullable
     @Override
@@ -42,7 +42,8 @@ public class CollegeResultsFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(StudentViewModel.class);
 
         MaterialToolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(view).popBackStack());
+        toolbar.setNavigationOnClickListener(v ->
+                Navigation.findNavController(view).popBackStack());
 
         progressBar = view.findViewById(R.id.progress_bar);
         tvEmpty     = view.findViewById(R.id.tv_empty);
@@ -52,20 +53,24 @@ public class CollegeResultsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         adapter = new CollegeResultAdapter(result -> {
-            // Chart feature coming soon
+            // Future: navigate to college detail on card tap
         });
+
+        // ── Pass student's own context to adapter so shortlist events are accurate
+        adapter.studentPercentile    = viewModel.percentile;
+        adapter.studentCategory      = viewModel.selectedCategory;
+        adapter.studentGender        = viewModel.selectedGender;
+        adapter.studentAdmissionType = viewModel.selectedAdmissionType;
+
         recyclerView.setAdapter(adapter);
 
         observeViewModel();
     }
 
     private void observeViewModel() {
-        // Loading state
-        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        });
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading ->
+                progressBar.setVisibility(loading ? View.VISIBLE : View.GONE));
 
-        // Results
         viewModel.getRecommendedColleges().observe(getViewLifecycleOwner(), results -> {
             if (results == null || results.isEmpty()) {
                 tvEmpty.setVisibility(View.VISIBLE);
@@ -78,11 +83,9 @@ public class CollegeResultsFragment extends Fragment {
             }
         });
 
-        // Error
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), msg -> {
-            if (msg != null && !msg.isEmpty()) {
+            if (msg != null && !msg.isEmpty())
                 Snackbar.make(requireView(), msg, Snackbar.LENGTH_LONG).show();
-            }
         });
     }
 }

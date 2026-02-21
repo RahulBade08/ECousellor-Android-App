@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Filter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,19 +24,41 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Student preference form — Fixed version.
+ *
+ * Branch & District selection now uses searchable AutoCompleteTextView.
+ * Typing "s" shows: Satara, Sangli, Solapur, etc.
+ * Selecting an option adds a removable chip below the field.
+ * Already-selected options are hidden from the dropdown.
+ */
 public class StudentFormFragment extends Fragment {
 
     private StudentViewModel viewModel;
 
     // Form widgets
-    private TextInputEditText etPercentile;
-    private AutoCompleteTextView dropCategory;
-    private AutoCompleteTextView dropAdmissionType;
-    private AutoCompleteTextView dropRound;
-    private MaterialButtonToggleGroup toggleGender;
-    private ChipGroup chipBranches;
-    private ChipGroup chipDistricts;
-    private MaterialButton btnFind;
+    private TextInputEditText            etPercentile;
+    private AutoCompleteTextView         dropCategory;
+    private AutoCompleteTextView         dropAdmissionType;
+    private AutoCompleteTextView         dropRound;
+    private MaterialButtonToggleGroup    toggleGender;
+    private AutoCompleteTextView         autoBranchSearch;
+    private AutoCompleteTextView         autoDistrictSearch;
+    private ChipGroup                    chipBranches;
+    private ChipGroup                    chipDistricts;
+    private MaterialButton               btnFind;
+
+    // Live lists of remaining (unselected) options
+    private final List<String> availableBranches  = new ArrayList<>();
+    private final List<String> availableDistricts = new ArrayList<>();
+
+    // Adapters (updated as user selects/removes items)
+    private ArrayAdapter<String> branchAdapter;
+    private ArrayAdapter<String> districtAdapter;
 
     @Nullable
     @Override
@@ -49,7 +72,6 @@ public class StudentFormFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get ViewModel (shared with results screen)
         viewModel = new ViewModelProvider(requireActivity()).get(StudentViewModel.class);
 
         // Bind views
@@ -58,20 +80,24 @@ public class StudentFormFragment extends Fragment {
         dropAdmissionType = view.findViewById(R.id.drop_admission_type);
         dropRound         = view.findViewById(R.id.drop_round);
         toggleGender      = view.findViewById(R.id.toggle_gender);
+        autoBranchSearch  = view.findViewById(R.id.auto_branch_search);
+        autoDistrictSearch= view.findViewById(R.id.auto_district_search);
         chipBranches      = view.findViewById(R.id.chip_group_branches);
         chipDistricts     = view.findViewById(R.id.chip_group_districts);
         btnFind           = view.findViewById(R.id.btn_find_colleges);
 
         setupDropdowns();
         setupGenderToggle();
-        observeBranchesAndDistricts();
+        setupBranchSearch();
+        setupDistrictSearch();
+        observeFormData();
 
         viewModel.loadFormData();
 
         btnFind.setOnClickListener(v -> validateAndSubmit());
     }
 
-    // ── Dropdowns ───────────────────────────────────────────
+    // ── Standard dropdowns (Category, Admission Type, Round) ─────────────────
 
     private void setupDropdowns() {
         // Category
@@ -87,6 +113,7 @@ public class StudentFormFragment extends Fragment {
                 requireContext(), android.R.layout.simple_dropdown_item_1line, AppConstants.ADMISSION_TYPES);
         dropAdmissionType.setAdapter(admTypeAdapter);
         dropAdmissionType.setText("HOME", false);
+        viewModel.selectedAdmissionType = "HOME"; // sync ViewModel with what UI shows on load
         dropAdmissionType.setOnItemClickListener((parent, v, position, id) ->
                 viewModel.selectedAdmissionType = AppConstants.ADMISSION_TYPES[position]);
 
@@ -100,50 +127,118 @@ public class StudentFormFragment extends Fragment {
                 viewModel.selectedRound = AppConstants.ROUNDS[position]);
     }
 
-    // ── Gender Toggle ────────────────────────────────────────
+    // ── Gender toggle ─────────────────────────────────────────────────────────
 
     private void setupGenderToggle() {
-        toggleGender.check(R.id.btn_general); // default GENERAL
+        toggleGender.check(R.id.btn_general);
         toggleGender.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
-                viewModel.selectedGender = (checkedId == R.id.btn_general) ? "GENERAL" : "FEMALE";
+                viewModel.selectedGender = (checkedId == R.id.btn_general) ? "GENERAL" : "LADIES";
             }
         });
     }
 
-    // ── Branch & District Chips ──────────────────────────────
+    // ── Searchable branch autocomplete ────────────────────────────────────────
 
-    private void observeBranchesAndDistricts() {
+    private void setupBranchSearch() {
+        branchAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                availableBranches);
+        autoBranchSearch.setAdapter(branchAdapter);
+        autoBranchSearch.setThreshold(1); // Show suggestions from first keystroke
+
+        autoBranchSearch.setOnItemClickListener((parent, v, position, id) -> {
+            String selected = (String) parent.getItemAtPosition(position);
+            addBranchChip(selected);
+            // Clear the search field so user can search for more
+            autoBranchSearch.setText("");
+        });
+    }
+
+    private void addBranchChip(String branch) {
+        if (viewModel.selectedBranches.contains(branch)) return;
+
+        viewModel.selectedBranches.add(branch);
+        availableBranches.remove(branch);
+        branchAdapter.notifyDataSetChanged();
+
+        Chip chip = new Chip(requireContext());
+        chip.setText(branch);
+        chip.setCloseIconVisible(true);
+        chip.setCheckable(false);
+        chip.setOnCloseIconClickListener(v -> removeBranchChip(branch, chip));
+        chipBranches.addView(chip);
+    }
+
+    private void removeBranchChip(String branch, Chip chip) {
+        viewModel.selectedBranches.remove(branch);
+        chipBranches.removeView(chip);
+        // Put it back in the available list, sorted
+        availableBranches.add(branch);
+        availableBranches.sort(String::compareToIgnoreCase);
+        branchAdapter.notifyDataSetChanged();
+    }
+
+    // ── Searchable district autocomplete ──────────────────────────────────────
+
+    private void setupDistrictSearch() {
+        districtAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                availableDistricts);
+        autoDistrictSearch.setAdapter(districtAdapter);
+        autoDistrictSearch.setThreshold(1);
+
+        autoDistrictSearch.setOnItemClickListener((parent, v, position, id) -> {
+            String selected = (String) parent.getItemAtPosition(position);
+            addDistrictChip(selected);
+            autoDistrictSearch.setText("");
+        });
+    }
+
+    private void addDistrictChip(String district) {
+        if (viewModel.selectedDistricts.contains(district)) return;
+
+        viewModel.selectedDistricts.add(district);
+        availableDistricts.remove(district);
+        districtAdapter.notifyDataSetChanged();
+
+        Chip chip = new Chip(requireContext());
+        chip.setText(district);
+        chip.setCloseIconVisible(true);
+        chip.setCheckable(false);
+        chip.setOnCloseIconClickListener(v -> removeDistrictChip(district, chip));
+        chipDistricts.addView(chip);
+    }
+
+    private void removeDistrictChip(String district, Chip chip) {
+        viewModel.selectedDistricts.remove(district);
+        chipDistricts.removeView(chip);
+        availableDistricts.add(district);
+        availableDistricts.sort(String::compareToIgnoreCase);
+        districtAdapter.notifyDataSetChanged();
+    }
+
+    // ── Observe loaded data from ViewModel ───────────────────────────────────
+
+    private void observeFormData() {
         viewModel.getBranches().observe(getViewLifecycleOwner(), branches -> {
-            chipBranches.removeAllViews();
-            for (String branch : branches) {
-                Chip chip = new Chip(requireContext());
-                chip.setText(branch);
-                chip.setCheckable(true);
-                chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) viewModel.selectedBranches.add(branch);
-                    else           viewModel.selectedBranches.remove(branch);
-                });
-                chipBranches.addView(chip);
-            }
+            availableBranches.clear();
+            availableBranches.addAll(branches);
+            availableBranches.sort(String::compareToIgnoreCase);
+            branchAdapter.notifyDataSetChanged();
         });
 
         viewModel.getDistricts().observe(getViewLifecycleOwner(), districts -> {
-            chipDistricts.removeAllViews();
-            for (String district : districts) {
-                Chip chip = new Chip(requireContext());
-                chip.setText(district);
-                chip.setCheckable(true);
-                chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) viewModel.selectedDistricts.add(district);
-                    else           viewModel.selectedDistricts.remove(district);
-                });
-                chipDistricts.addView(chip);
-            }
+            availableDistricts.clear();
+            availableDistricts.addAll(districts);
+            availableDistricts.sort(String::compareToIgnoreCase);
+            districtAdapter.notifyDataSetChanged();
         });
     }
 
-    // ── Validation & Submit ──────────────────────────────────
+    // ── Validation & submit ───────────────────────────────────────────────────
 
     private void validateAndSubmit() {
         String percentileText = etPercentile.getText() != null
@@ -165,10 +260,7 @@ public class StudentFormFragment extends Fragment {
             return;
         }
 
-        // Save to ViewModel
         viewModel.percentile = percentile;
-
-        // Trigger API call and navigate
         viewModel.findColleges();
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_studentForm_to_collegeResults);
